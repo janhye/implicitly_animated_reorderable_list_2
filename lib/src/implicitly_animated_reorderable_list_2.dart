@@ -118,6 +118,9 @@ class ImplicitlyAnimatedReorderableList<E extends Object>
   /// on performance and autoscrolling.
   final Widget? header;
 
+  /// This can be useful if you want to show SliverAppBar after the header.
+  final Widget? afterHeader;
+
   /// A non-reorderable widget displayed at the bottom.
   ///
   /// This can be useful if you want to show content after
@@ -171,6 +174,7 @@ class ImplicitlyAnimatedReorderableList<E extends Object>
     this.onReorderStarted,
     required this.onReorderFinished,
     this.header,
+    this.afterHeader,
     this.footer,
   })  : liftDuration = liftDuration ?? reorderDuration,
         settleDuration = settleDuration ?? liftDuration ?? reorderDuration,
@@ -213,6 +217,8 @@ class ImplicitlyAnimatedReorderableListState<E extends Object>
   final GlobalKey _headerKey = GlobalKey(debugLabel: 'header_key');
   bool get hasHeader => widget.header != null;
   double _headerHeight = 0.0;
+
+  bool get hasAfterHeader => widget.afterHeader != null;
 
   // The key of the footer.
   final GlobalKey _footerKey = GlobalKey(debugLabel: 'footer_key');
@@ -671,6 +677,7 @@ class ImplicitlyAnimatedReorderableListState<E extends Object>
               child: widget.header,
             ),
           ),
+        if (hasAfterHeader) widget.afterHeader!,
         SliverPadding(
           padding: widget.padding ?? EdgeInsets.zero,
           sliver: CustomSliverAnimatedList(
