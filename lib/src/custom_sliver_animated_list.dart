@@ -158,7 +158,11 @@ class CustomSliverAnimatedListState extends State<CustomSliverAnimatedList>
   /// This method's semantics are the same as Dart's [List.insert] method:
   /// it increases the length of the list by one and shifts all items at or
   /// after [index] towards the end of the list.
-  void insertItem(int index, {Duration duration = _kDuration}) {
+  void insertItem(
+    int index, {
+    required Duration duration,
+    VoidCallback? onFinished,
+  }) {
     assert(index >= 0);
 
     final int itemIndex = _indexToItemIndex(index);
@@ -189,6 +193,14 @@ class CustomSliverAnimatedListState extends State<CustomSliverAnimatedList>
         ..sort();
       _itemsCount += 1;
     });
+
+    if (onFinished != null) {
+      controller.addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          onFinished();
+        }
+      });
+    }
 
     controller.forward().then<void>((_) {
       _removeActiveItemAt(_incomingItems, incomingItem.itemIndex)!

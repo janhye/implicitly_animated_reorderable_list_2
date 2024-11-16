@@ -129,6 +129,9 @@ class ImplicitlyAnimatedReorderableList<E extends Object>
   /// on performance and autoscrolling.
   final Widget? footer;
 
+  /// Called when an item finishes its insertion animation
+  final void Function(E item)? onInsertFinished;
+
   /// Creates a Flutter ListView that implicitly animates between the changes of two lists with
   /// the support to reorder its items.
   ///
@@ -176,6 +179,7 @@ class ImplicitlyAnimatedReorderableList<E extends Object>
     this.header,
     this.afterHeader,
     this.footer,
+    this.onInsertFinished,
   })  : liftDuration = liftDuration ?? reorderDuration,
         settleDuration = settleDuration ?? liftDuration ?? reorderDuration,
         assert(
@@ -193,6 +197,7 @@ class ImplicitlyAnimatedReorderableList<E extends Object>
           removeDuration: removeDuration,
           updateDuration: updateDuration,
           spawnIsolate: spawnIsolate,
+          onInsertFinished: onInsertFinished,
         );
 
   @override

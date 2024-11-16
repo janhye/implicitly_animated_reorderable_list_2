@@ -62,6 +62,10 @@ abstract class ImplicitlyAnimatedListBase<W extends Widget, E extends Object>
   /// use its own metrics to decide, whether a new isolate has to be spawned or not for
   /// optimal performance.
   final bool? spawnIsolate;
+
+  /// Called when an item finishes its insertion animation
+  final void Function(E item)? onInsertFinished;
+
   const ImplicitlyAnimatedListBase({
     Key? key,
     required this.items,
@@ -73,6 +77,7 @@ abstract class ImplicitlyAnimatedListBase<W extends Widget, E extends Object>
     required this.removeDuration,
     required this.updateDuration,
     required this.spawnIsolate,
+    this.onInsertFinished,
   }) : super(key: key);
 }
 
@@ -219,8 +224,13 @@ abstract class ImplicitlyAnimatedListBaseState<W extends Widget,
   @mustCallSuper
   @protected
   @override
-  void onInserted(int index, E item) =>
-      list.insertItem(index, duration: widget.insertDuration);
+  void onInserted(int index, E item) {
+    list.insertItem(
+      index,
+      duration: widget.insertDuration,
+      onFinished: () => widget.onInsertFinished?.call(item),
+    );
+  }
 
   @mustCallSuper
   @protected
