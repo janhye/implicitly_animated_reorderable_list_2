@@ -155,7 +155,10 @@ class _HandleState extends State<Handle> {
       behavior: HitTestBehavior.translucent,
       onPointerDown: (event) => _onDown(event.localPosition),
       onPointerMove: (event) => _onUpdate(event.localPosition),
-      onPointerUp: (_) => _onUp(),
+      onPointerUp: (_) {
+        widget.onUp?.call();
+        _onUp();
+      },
       onPointerCancel: (_) => _onUp(),
       child: widget.child,
     );
@@ -189,7 +192,6 @@ class _HandleState extends State<Handle> {
   }
 
   void _onUp() {
-    widget.onUp?.call();
     _handler?.cancel();
     if (_inDrag) _onDragEnded();
   }
