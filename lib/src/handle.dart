@@ -37,6 +37,12 @@ class Handle extends StatefulWidget {
 
   final bool enabled;
 
+  /// Callbacks for when the pointer is down.
+  final void Function(Offset)? onDown;
+
+  /// Callbacks for when the pointer is up or cancel.
+  final void Function()? onUp;
+
   /// Creates a widget that can initiate a drag/reorder of an item inside an
   /// [ImplicitlyAnimatedReorderableList].
   ///
@@ -49,6 +55,8 @@ class Handle extends StatefulWidget {
     this.capturePointer = true,
     this.vibrate = true,
     this.enabled = true,
+    this.onDown,
+    this.onUp,
   }) : super(key: key);
 
   @override
@@ -154,6 +162,7 @@ class _HandleState extends State<Handle> {
   }
 
   void _onDown(Offset pointer) {
+    widget.onDown?.call(pointer);
     _pointer = pointer;
     _currentOffset = _offset(_pointer);
     _downOffset = _offset(_pointer);
@@ -180,6 +189,7 @@ class _HandleState extends State<Handle> {
   }
 
   void _onUp() {
+    widget.onUp?.call();
     _handler?.cancel();
     if (_inDrag) _onDragEnded();
   }
