@@ -159,7 +159,10 @@ class _HandleState extends State<Handle> {
         widget.onUp?.call();
         _onUp();
       },
-      onPointerCancel: (_) => _onUp(),
+      onPointerCancel: (_) {
+        widget.onUp?.call();
+        _onUp();
+      },
       child: widget.child,
     );
   }
